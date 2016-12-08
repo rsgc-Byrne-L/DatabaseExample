@@ -163,30 +163,14 @@ class ViewController: UIViewController {
                 do {
                     
                     // Try to run the query
-                    let results : FMResultSet? = try contactDB.executeQuery(SQL, values: nil)
+                    results = try contactDB.executeQuery(SQL, values: nil)
                     
                     // We know database should exist now (since viewDidLoad runs at startup)
                     // Now, open the database and select data using value given for name in the view (user interface)
                     if results?.next() == true {    // Something was found for this query
                         
-                        guard let nameValue : String = results?.string(forColumn: "name") else {
-                            print("Nil value returned from query for the name, that's odd.")
-                            return
-                        }
-                        guard let addressValue : String = results?.string(forColumn: "address") else {
-                            print("Nil value returned from query for the address, that's odd.")
-                            return
-                        }
-                        guard let phoneValue : String = results?.string(forColumn: "phone") else {
-                            print("Nil value returned from query for the phone number, that's odd.")
-                            return
-                        }
+                        displayResult()
                         
-                        // Load the results in the view (user interface)
-                        textFieldAddress.text = addressValue
-                        textFieldPhone.text = phoneValue
-                        textFieldName.text = nameValue
-                        labelStatus.text = "Record found!"
                         
                     } else {
                         
@@ -214,8 +198,9 @@ class ViewController: UIViewController {
         
     }
     
-    @IBAction func findOnPartialSearchString(_ sender: AnyObject) {
+    @IBAction func findOnPartialSearchString(_ sender: Any) {
         
+        // Invoke the findContact method.
         if let searchString = textFieldSearch.text {
             if searchString == "" {
                 resetFields()
@@ -223,7 +208,7 @@ class ViewController: UIViewController {
                 buttonNext.isEnabled = false
                 buttonPrior.isEnabled = false
             } else {
-                findContact (sender)
+                findContact(sender)
             }
         }
         
@@ -262,7 +247,7 @@ class ViewController: UIViewController {
             textFieldName.text = nameValue
             textFieldAddress.text = addressValue
             textFieldPhone.text = phoneValue
-            labelStatus.text = "Record found!"
+            labelStatus.text = "21312312"
             
             // Enable the next result button if there is another result
             if results?.next() == true {
