@@ -42,6 +42,10 @@ class ViewController: UIViewController {
     // Will save path to database file
     var databasePath = NSString()
     
+    var resultArray : [Contact] = []
+    
+    var currentContact = -1
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -247,7 +251,17 @@ class ViewController: UIViewController {
             textFieldName.text = nameValue
             textFieldAddress.text = addressValue
             textFieldPhone.text = phoneValue
-            labelStatus.text = "21312312"
+            labelStatus.text = "Contact found!"
+            
+            // Adding contacts to our array as we go through the database
+            resultArray.append(Contact(name: nameValue, address: addressValue, phone: phoneValue))
+            
+            // Keeping track of current position
+            currentContact += 1
+            
+            print("CURRENT CONTACT IS: \(currentContact)")
+            
+            print("ARRAY DATA: \(resultArray)")
             
             // Enable the next result button if there is another result
             if results?.next() == true {
@@ -266,12 +280,28 @@ class ViewController: UIViewController {
             
         }
         
-        
         print("Another row?")
         print(results?.hasAnotherRow())
         print("contents of next row")
         print(results?.resultDictionary())
     }
+    
+    @IBAction func showPriorResult(_ sender: AnyObject) {
+        // Decrease the current contact
+        if currentContact == 0 {
+            buttonPrior.isEnabled = false
+        } else {
+            currentContact -= 1
+            // Load new data into labels
+            textFieldName.text = resultArray[currentContact].name
+            textFieldAddress.text = resultArray[currentContact].address
+            textFieldPhone.text = resultArray[currentContact].phone
+        }
+        
+        print("INSIDE SHOW PRIOR: \(currentContact)")
+    }
+
+    
     
 }
 
