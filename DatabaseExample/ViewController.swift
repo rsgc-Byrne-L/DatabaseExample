@@ -46,6 +46,9 @@ class ViewController: UIViewController {
     
     var currentContact = -1
     
+    var check = false
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -232,7 +235,19 @@ class ViewController: UIViewController {
     
     func displayResult() {
         
-        if results?.hasAnotherRow() == true {
+        if check == true {
+            textFieldName.text = resultArray[currentContact].name
+            textFieldAddress.text = resultArray[currentContact].address
+            textFieldPhone.text = resultArray[currentContact].phone
+            currentContact += 1
+            if currentContact > 0 {
+                buttonPrior.isEnabled = true
+            }
+            if currentContact >= resultArray.count {
+                buttonNext.isEnabled = false
+            }
+            
+        } else if results?.hasAnotherRow() == true {
             
             guard let nameValue : String = results?.string(forColumn: "name") else {
                 print("Nil value returned from query for the address, that's odd.")
@@ -258,6 +273,7 @@ class ViewController: UIViewController {
             
             // Keeping track of current position
             currentContact += 1
+            
             
             print("CURRENT CONTACT IS: \(currentContact)")
             
@@ -288,15 +304,20 @@ class ViewController: UIViewController {
     
     @IBAction func showPriorResult(_ sender: AnyObject) {
         // Decrease the current contact
-        if currentContact == 0 {
-            buttonPrior.isEnabled = false
-        } else {
             currentContact -= 1
+        if currentContact == 0 {
+            check = true
+        }
+        // Make buttonPrior enabled
+        buttonNext.isEnabled = true
             // Load new data into labels
             textFieldName.text = resultArray[currentContact].name
             textFieldAddress.text = resultArray[currentContact].address
             textFieldPhone.text = resultArray[currentContact].phone
-        }
+            if currentContact == 0 {
+                buttonPrior.isEnabled = false
+                
+            }
         
         print("INSIDE SHOW PRIOR: \(currentContact)")
     }
